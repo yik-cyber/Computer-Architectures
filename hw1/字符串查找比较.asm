@@ -1,3 +1,27 @@
+;实验目的：掌握串指令的基本功能及应用
+;实验内容：利用DOS功能调用从键盘输入一个字符串，然后输入单个字符，利用串扫描指令查找该字符串中是否有该字符。具体要求如下：
+;(1)输出该字符出现的总次数，没有出现输出Sorry!
+;(2)如果找到，则在屏幕上显示：
+;Last position: X
+;其中，X为该字符在字符串中最后一次出现的位置
+;(3)输入一个字符串后，可以反复输入希望查询的字符，直到按ESC键结束程序
+;(4)每个输入字符独占一行，输出查找结果独占一行，位置编码从1开始，格式示例如下：
+;abcdefagh
+;a
+;2
+;Last position: 7
+;x
+;Sorry!
+;(5)程序结束时，在屏幕上显示本人的学号和姓名全拼
+;ID: 1302102910
+;NAME: Xiao Xiannv
+
+
+
+
+
+
+
 data segment
     buf db 1024 dup(?)
     pos_msg db 'Last position:$'
@@ -67,12 +91,14 @@ code segment
              jnz flag ; si > 1, not store the pos
              mov di, cx
              dec di
+             
        flag: dec cx
              dec bx
              jg strloop
              cmp si, 0
              je sorry_output
              mov ax, si
+             
      mod_pre: mov cl, 10d
               mov si, 03d
               mov bx, offset out_buf
@@ -95,6 +121,7 @@ code segment
               mov bl, [bx]
               cmp bl, 00h
               jne char_input
+              
      pos_output: mov bx, offset flag_msg
                  mov al, 01h
                  mov [bx], al ;set the flag to ffh
@@ -103,6 +130,7 @@ code segment
                  int 21h
                  mov ax, di
                  jmp mod_pre
+                 
     sorry_output: mov dx, offset sorry_msg
                   mov ah, 09h
                   int 21h
